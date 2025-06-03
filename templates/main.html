@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Grader</title>    
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="min-h-screen bg-gray-50">
+   <header class="bg-white shadow-sm">
+        <div class="mx-auto px-4 py-4 flex items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-blue-600 p-2 rounded-lg">
+                    <FileTextIcon class="h-6 w-6 text-white" />
+                </div>
+                <h1 class="text-xl font-bold text-gray-900">Resume Grader</h1>
+            </div>
+            <p class="ml-4 text-sm text-gray-600 hidden sm:block">
+                Optimize your resume for job applications
+            </p>
+        </div>
+    </header>
+
+    <form class="container mx-auto px-4 py-8 max-w-5xl" method="post">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Resume uploader section -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                    Upload Resume
+                </h2>
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:bg-gray-50 transition-colors">
+                    <!-- <CloudUpload class="mx-auto h-12 w-12 text-gray-400" /> -->
+                    <i data-lucide="menu"></i>
+                    <p class="mt-2 text-gray-700">Drag and drop your resume here</p>
+                    <p class="text-sm text-gray-500 mt-1">or click to browse files</p>
+                    <p class="text-xs text-gray-400 mt-4">
+                        Supported formats: .pdf, .docx, .txt
+                    </p>
+                    <input type="file" id="resumeInput" class="hidden" accept=".pdf,.docx,.txt"
+                        onChange={handleFileChange} />
+                </div>
+                <div class="mt-6">
+                    <h3 class="font-medium text-gray-700 mb-2">Requirements</h3>
+                    <ul class="text-sm text-gray-600 space-y-1.5">
+                        <li class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <span>File must be in PDF, DOCX, or TXT format</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <span>Maximum file size: 5MB</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <span>Make sure your resume is up-to-date</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Job Description section -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                    Upload Job Description
+                </h2>
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:bg-gray-50 transition-colors">
+                    <UploadCloudIcon class="mx-auto h-12 w-12 text-gray-400" />
+                    <p class="mt-2 text-gray-700">Drag and drop your resume here</p>
+                    <p class="text-sm text-gray-500 mt-1">or click to browse files</p>
+                    <p class="text-xs text-gray-400 mt-4">
+                        Supported formats: .pdf, .docx, .txt
+                    </p>
+                    <input type="file" id="resumeInput" class="hidden" accept=".pdf,.docx,.txt" onChange="" />
+                </div>
+                <div class="mt-6">
+                    <h3 class="font-medium text-gray-700 mb-2">Tips</h3>
+                    <ul class="text-sm text-gray-600 space-y-1.5">
+                        <li class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <span>File must be in PDF, DOCX, or TXT format</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <span>Maximum file size: 5MB</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <span>Make sure your resume is up-to-date</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 flex justify-center gap-4">
+            <button class="px-6 py-3 rounded-lg font-medium border border-gray-300 hover:bg-gray-100 transition-colors">
+                Analyse
+            </button>
+
+            <button class="px-6 py-3 rounded-lg font-medium border border-gray-300 hover:bg-gray-100 transition-colors">
+                Reset
+            </button>
+        </div>
+    </form>
+</body>
+</html>

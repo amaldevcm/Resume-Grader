@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Grader</title>    
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="min-h-screen bg-gray-50">
+   <header class="bg-white shadow-sm">
+        <div class="mx-auto px-4 py-4 flex items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-blue-600 p-2 rounded-lg">
+                    <FileTextIcon class="h-6 w-6 text-white" />
+                </div>
+                <h1 class="text-xl font-bold text-gray-900">Resume Grader</h1>
+            </div>
+            <p class="ml-4 text-sm text-gray-600 hidden sm:block">
+                Optimize your resume for job applications
+            </p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 max-w-5xl">
+        <div class="mt-12 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-6 border-b border-gray-200">
+            <h2 class="text-2xl font-bold text-gray-800">
+            Resume Analysis Results
+            </h2>
+            <p class="text-gray-600 mt-1">
+            Here's how your resume matches the job description
+            </p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3">
+            <div class="p-6 flex justify-center border-b lg:border-b-0 lg:border-r border-gray-200">
+            <ScoreGauge score={results.score} />
+            </div>
+            <div class="col-span-2 p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                Improvement Suggestions
+            </h3>
+            <ul class="space-y-3">
+                {results.suggestions.map((suggestion, index) => (
+                <li key={index} class="flex gap-3">
+                    <div class="mt-0.5">
+                    <AlertCircleIcon class="h-5 w-5 text-amber-500" />
+                    </div>
+                    <span class="text-gray-700">{suggestion}</span>
+                </li>
+                ))}
+            </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-200">
+            <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                Keyword Analysis
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-green-50 p-4 rounded-lg">
+                <h4 class="font-medium text-green-800 flex items-center gap-2 mb-3">
+                    <CheckCircleIcon class="h-5 w-5" />
+                    <span>Matched Keywords</span>
+                </h4>
+                <div class="flex flex-wrap gap-2">
+                    {results.keywordMatch.matched.map((keyword, index) => (
+                    <span
+                        key={index}
+                        class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full"
+                    >
+                        {keyword}
+                    </span>
+                    ))}
+                </div>
+                </div>
+                <div class="bg-red-50 p-4 rounded-lg">
+                <h4 class="font-medium text-red-800 flex items-center gap-2 mb-3">
+                    <XCircleIcon class="h-5 w-5" />
+                    <span>Missing Keywords</span>
+                </h4>
+                <div class="flex flex-wrap gap-2">
+                    {results.keywordMatch.missing.map((keyword, index) => (
+                    <span
+                        key={index}
+                        class="px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full"
+                    >
+                        {keyword}
+                    </span>
+                    ))}
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-200 p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+            Section Feedback
+            </h3>
+            <div class="space-y-4">
+            {Object.entries(results.sectionFeedback).map(
+                ([section, feedback]) => (
+                <div key={section} class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-medium text-gray-800 capitalize mb-2">
+                    {section}
+                    </h4>
+                    <p class="text-gray-700">{feedback}</p>
+                </div>
+                ),
+            )}
+            </div>
+        </div>
+        <div class="bg-blue-50 p-6 border-t border-blue-100">
+            <div class="flex items-start gap-4">
+            <div class="p-2 bg-blue-100 rounded-full">
+                <ArrowRightIcon class="h-5 w-5 text-blue-700" />
+            </div>
+            <div>
+                <h3 class="text-lg font-medium text-blue-800">Next Steps</h3>
+                <p class="text-blue-700 mt-1">
+                Make the suggested improvements to your resume and re-upload for a
+                new analysis. Focus on adding the missing keywords and
+                strengthening the sections that need improvement.
+                </p>
+            </div>
+            </div>
+        </div>
+        </div>
+    </main>
+</body>
+</html>
