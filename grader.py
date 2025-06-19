@@ -1,8 +1,5 @@
-from flask import Flask, render_template, request, redirect, jsonify
-from werkzeug.utils import secure_filename
-import torch
-from sentence_transformers import SentenceTransformer, util
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline, AutoModelForCausalLM
+from flask import Flask, render_template, request, redirect
+from sentence_transformers import util
 import os
 import pdfplumber
 import docx
@@ -19,10 +16,6 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 ALLOWED_EXTENSIONS = {'.txt', '.pdf', '.docx'}
-
-# Load models
-print("Loading models...")
-embedder = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
 def load_file(file_path):
     ext = os.path.splitext(file_path)[-1].lower()
@@ -52,29 +45,61 @@ def truncate_text(text, max_words=512):
     return ' '.join(text.split()[:max_words])
 
 def format_ouput(data):
-    pass
+    try:
+        data = data.strip()
+
+        if data.startswith("```json"):
+            data = data[7:]  
+        if data.endswith("```"):
+            data = data[:-3] 
+
+        # Try parsing JSON
+        return json.loads(data)
+
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Invalid JSON string: {e}")
 
 def get_improvement_suggestions(resume, job_desc):
 
-    prompt = f"""
-You are a professional career coach.Suggest improvements to the resume to better match the job description.
-Include missing skills, keyword suggestions, and better phrasing if applicable.
+    prompt = """
+You are a professional career coach. Evaluate how well the following resume aligns with the given job description.
 
-Give output as:
+Output only a valid JSON string using the structure below. Do not include any other text, comments, or formatting outside the JSON block.
 
-Score: <score>/100,
-Match: <array of matching skills>,
-Missing: <array of missing skills>,  
-Suggestions: <suggestions in python array>,
-Comment: <brief comment in string format>
+{
+  score: <integer between 0 and 100>,
+  match: ["<matching_skill_1>", "<matching_skill_2>", "..."],
+  missing: ["<missing_skill_1>", "<missing_skill_2>", "..."],
+  suggestions: ["<concise suggestion 1>", "<concise suggestion 2>", "<concise suggestion 3>"],
+  section: {
+    "Education": "<brief feedback on education section>",
+    "Work Experience": "<brief feedback on work experience section>",
+    "Projects": "<brief feedback on projects section>",
+    "Achievements": "<brief feedback on achievements section>",
+  },
+  comment: "<professional summary of how well the resume aligns with the job description. Be neutral, factual, and avoid exaggeration.>",
+}
 
-Resume:
+Rules:
+- Output must be valid JSON with no trailing commas, quotation mismatches, or formatting errors.
+- Do not include any explanation, header, or markdown formatting — just the JSON.
+- score must reflect how well the resume fits the job (100 = perfect match).
+- match and missing arrays must each contain 5 to 15 distinct, relevant skills, tools, or qualifications, clearly stated in either the resume or job description.
+- suggestions, section, and comment must each be arrays of 1 to 3 concise strings.
+- suggestions must be concise, specific suggestions to improve the resume for this job.
+- section must be a JSON object with keys like "Education", "Work Experience", or "Projects" and values as concise feedback.
+- Follow grammar and spelling rules.
+- Avoid assumptions — only list what's explicitly mentioned.
+- Ensure the output is properly structured for parsing.
+
+"""
+
+    prompt += f"""Resume:
 {resume}
 
 Job Description:
 {job_desc}
 """
-    
     try:
         chat_completion = groq_client.chat.completions.create(
             messages=[
@@ -86,10 +111,9 @@ Job Description:
             model="llama3-8b-8192",  # Or your desired Groq model
         )
         generated_content = chat_completion.choices[0].message.content
-        
-        return generated_content
+        return format_ouput(generated_content)
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return "Error"
 
 
 @app.route("/", methods=['GET', "POST"])
@@ -121,18 +145,14 @@ def grader():
         resume = load_file(os.path.join(app.config['UPLOAD_FOLDER'], resume_text.filename))
         jobDesc = load_file(os.path.join(app.config['UPLOAD_FOLDER'], job_desc.filename))
 
-        print("\nCalculating match score...")
-        score = compute_similarity(resume, jobDesc)
-        # print(f"\nMatch Score: {score}%")
-
-        print("\nGenerating suggestions to improve resume...")
-        suggestions = get_improvement_suggestions(resume, jobDesc)
+        results = get_improvement_suggestions(resume, jobDesc)
         print("\n--- Suggestions ---")
-        print(suggestions)
+        print(json.dumps(results))
 
-        # result = {'score': score, 'suggestions': suggestions}
-
-        return render_template('result.html', data=suggestions)
+        if(type(results) is not dict):
+            return render_template('errorPage.html')
+        else:
+            return render_template('result.html', data=json.dumps(results))
 
     else:
         pass

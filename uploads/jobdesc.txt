@@ -1,0 +1,34 @@
+Do you want to solve business challenges through innovative technology? Do you enjoy working on cutting-edge, scalable services technology in a team environment? Do you like working on industry-defining projects that move the needle?
+
+At Amazon, we hire the best minds in technology to innovate and build on behalf of our customers. The intense focus we have on our customers is why we are one of the world’s most beloved brands – customer obsession is part of our company DNA.
+
+Our Software Development Engineers (SDEs) use cutting-edge technology to solve complex problems and get to see the impact of their work first-hand.
+
+If this is you, come chart your own path at Amazon!
+
+The challenges SDEs solve for at Amazon are big and impact millions of customers, sellers, and products around the world. We’re looking for individuals who are excited by the idea of creating new products, features, and services from scratch while managing ambiguity and the pace of a company whose ship cycles are measured in weeks, not years.
+
+Key job responsibilities
+- Collaborate with experienced cross-disciplinary Amazonians to conceive, design, and bring to market innovative products and services.
+- Design and build innovative technologies in a large distributed computing environment and help lead fundamental changes in the industry.
+- Create solutions to run predictions on distributed systems with exposure to innovative technologies at incredible scale and speed.
+- Build distributed storage, index, and query systems that are scalable, fault-tolerant, low cost, and easy to manage/use.
+- Work in an agile environment to deliver high quality software.
+
+BASIC QUALIFICATIONS
+- Graduated less than 12 months ago or about to complete a Bachelor’s or Master’s Degree in Computer Science, Computer Engineering, or related fields at time of application
+- Although no specific programming language is required – you should be familiar with the syntax of languages such as Java, C/C++, or Python
+- Knowledge of Computer Science fundamentals such as object-oriented design, algorithm design, data structures, problem solving and complexity analysis.
+
+
+PREFERRED QUALIFICATIONS
+- Previous technical internship(s) if applicable
+- Experience with distributed, multi-tiered systems, algorithms, and relational databases
+- Experience in optimization mathematics such as linear programming and nonlinear optimisation
+- Ability to effectively articulate technical challenges and solutions
+- Adept at handling ambiguous or undefined problems as well as ability to think abstractly.
+
+EU Student Programs Team
+
+
+Amazon is an equal opportunities employer. We believe passionately that employing a diverse workforce is central to our success. We make recruiting decisions based on your experience and skills. We value your passion to discover, invent, simplify and build. Protecting your privacy and the security of your data is a longstanding top priority for Amazon. Please consult our Privacy Notice (https://www.amazon.jobs/en/privacy_page) to know more about how we collect, use and transfer the personal data of our candidates.
