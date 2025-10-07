@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Grader</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <script src="../static/main.js"></script>
+    <style>
+        @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-50">
+    <header class="bg-white shadow-sm">
+        <div class="mx-auto px-4 py-4 flex items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-blue-600 p-2 rounded-lg">
+                    <i class="bi bi-mortarboard h-6 w-6 text-2xl text-white"></i>
+                </div>
+                <h1 class="text-xl font-bold text-gray-900">Resume Grader</h1>
+            </div>
+            <p class="ml-4 text-sm text-gray-600 hidden sm:block">
+                Optimize your resume for job applications
+            </p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 max-w-5xl">
+        <div className="spacxe-y-8">
+            <div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                    Tailored Documents
+                </h2>
+                <p className="text-gray-600 mb-6">
+                    Based on your resume and the job description, we've customized the
+                    following documents for your application.
+                </p>
+            </div>
+
+            <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                <h3 className="text-lg font-medium text-blue-800 mb-2">
+                    Tips for Using These Documents
+                </h3>
+                <ul className="space-y-2 text-blue-700">
+                    <li className="flex items-start gap-2">
+                        <div className="min-w-1.5 h-1.5 rounded-full bg-blue-400 mt-2"></div>
+                        <span>Review both documents carefully before submitting</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                        <div className="min-w-1.5 h-1.5 rounded-full bg-blue-400 mt-2"></div>
+                        <span>
+                            Personalize further with specific details about the company
+                        </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                        <div className="min-w-1.5 h-1.5 rounded-full bg-blue-400 mt-2"></div>
+                        <span>Make sure to update your contact information</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+</body>
