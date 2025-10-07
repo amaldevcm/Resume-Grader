@@ -38,12 +38,12 @@
                 </p>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-3">
-                <div class="p-6 flex justify-center border-b lg:border-b-0 lg:border-r border-gray-200" name="resumeScore" id="resumeScore">
-                    <!-- <ScoreGauge score={gradeData.score} /> -->
-                    <span >{{data.score}}</span>
+                <div class="p-6 flex justify-center border-b lg:border-b-0 lg:border-r border-gray-200"
+                    name="resumeScore" id="resumeScore">
+                    <img src="data:image/png;base64, {{ chart }}" alt="Score card">
                 </div>
                 <div class="col-span-2 p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 font-bold">
                         Improvement Suggestions
                     </h3>
                     <ui class="space-y-3" name="suggestion" id="suggestion"></ui>
@@ -51,20 +51,20 @@
             </div>
             <div class="border-t border-gray-200">
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 font-bold">
                         Keyword Analysis
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-green-50 p-4 rounded-lg">
                             <h4 class="font-medium text-green-800 flex items-center gap-2 mb-3">
-                                 <i class="bi bi-check2-circle text-lg"></i>
+                                <i class="bi bi-check2-circle text-lg"></i>
                                 <span>Matched Keywords</span>
                             </h4>
                             <div class="flex flex-wrap gap-2" name="matchedSkill" id="matchedSkill"></div>
                         </div>
                         <div class="bg-red-50 p-4 rounded-lg">
                             <h4 class="font-medium text-red-800 flex items-center gap-2 mb-3">
-                                 <i class="bi bi-x-circle text-lg"></i>
+                                <i class="bi bi-x-circle text-lg"></i>
                                 <span>Missing Keywords</span>
                             </h4>
                             <div class="flex flex-wrap gap-2" name="missingSkill" id="missingSkill"></div>
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div class="border-t border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 font-bold">
                     Section Feedback
                 </h3>
                 <div class="space-y-4" id="sectionFeedback" name="sectionFeedback"></div>
@@ -84,7 +84,7 @@
                         <i class="bi bi-arrow-right h-5 w-6 text-blue-700"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-medium text-blue-800">Next Steps</h3>
+                        <h3 class="text-lg font-medium text-blue-800 font-bold">Next Steps</h3>
                         <p class="text-blue-700 mt-1">
                             Make the suggested improvements to your resume and re-upload for a
                             new analysis. Focus on adding the missing keywords and
@@ -99,12 +99,9 @@
 
 <script>
     const result = {{ data | safe}};             // processing received data
-    console.log(result);
 
     const matchedSkillEle = document.getElementById("matchedSkill");
-    console.log(matchedSkillEle)
     result.match.forEach(skill => {
-        console.log(skill)
         let ele = document.createElement("span");
         ele.setAttribute('class', 'px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full');
         ele.innerHTML = skill;
@@ -140,7 +137,6 @@
                         ${arr[0]} 
                     </h4>
                     <p class="text-gray-700">${arr[1]}</p>`;
-        console.log(str);
         ele.innerHTML = str;
         sectionFeedback.append(ele);
     });

@@ -1,11 +1,16 @@
 from flask import Flask, render_template, request, redirect
-from sentence_transformers import util
 import os
 import pdfplumber
 import docx
 from groq import Groq
 from dotenv import load_dotenv
 import json
+from LLM import generateLLMResopnse
+from customResume import generateResume
+import matplotlib.pyplot as plt
+from matplotlib.patches import Circle
+import io
+import base64
 
 
 
@@ -14,8 +19,10 @@ load_dotenv()
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['UPLOAD_FOLDER'] = 'uploads'
-groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 ALLOWED_EXTENSIONS = {'.txt', '.pdf', '.docx'}
+resume_file_name = ""
+job_file_name = ""
+
 
 def load_file(file_path):
     ext = os.path.splitext(file_path)[-1].lower()
@@ -35,32 +42,10 @@ def load_file(file_path):
     else:
         raise ValueError(f"Unsupported file format: {ext}. Use .txt, .pdf, or .docx")
 
-def compute_similarity(resume, job_desc):
-    resume_embed = embedder.encode(resume, convert_to_tensor=True)
-    jd_embed = embedder.encode(job_desc, convert_to_tensor=True)
-    score = util.pytorch_cos_sim(resume_embed, jd_embed).item()
-    return round(score * 100, 2)
-
 def truncate_text(text, max_words=512):
     return ' '.join(text.split()[:max_words])
 
-def format_ouput(data):
-    try:
-        data = data.strip()
-
-        if data.startswith("```json"):
-            data = data[7:]  
-        if data.endswith("```"):
-            data = data[:-3] 
-
-        # Try parsing JSON
-        return json.loads(data)
-
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Invalid JSON string: {e}")
-
 def get_improvement_suggestions(resume, job_desc):
-
     prompt = """
 You are a professional career coach. Evaluate how well the following resume aligns with the given job description.
 
@@ -93,27 +78,87 @@ Rules:
 - Ensure the output is properly structured for parsing.
 
 """
+    prompt += f"""
+    ### INPUTS:
 
-    prompt += f"""Resume:
-{resume}
+    #### Resume:
+    {resume}
 
-Job Description:
-{job_desc}
-"""
-    try:
-        chat_completion = groq_client.chat.completions.create(
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt,
-                }
-            ],
-            model="llama3-8b-8192",  # Or your desired Groq model
-        )
-        generated_content = chat_completion.choices[0].message.content
-        return format_ouput(generated_content)
-    except Exception as e:
-        return "Error"
+    #### Job Description:
+    {job_desc}
+
+    """
+    return generateLLMResopnse(prompt)
+
+
+# Function to display score card
+def plot_circular_scorecard(score):
+    if not 0 <= score <= 100:
+        raise ValueError("Score must be between 0 and 100.")
+
+    # Data for the pie chart
+    data = [score, 100 - score]
+    
+    # Define colors
+    score_color = '#4CAF50'  # Green
+    remaining_color = '#E0E0E0'  # Light gray
+    colors = [score_color, remaining_color]
+
+    # Create the plot
+    fig, ax = plt.subplots(figsize=(3, 3))
+    
+    # Create the outer pie/donut chart
+    ax.pie(
+        data, 
+        colors=colors, 
+        startangle=90, 
+        counterclock=False, 
+        wedgeprops=dict(width=0.3, edgecolor='white')
+    )
+    
+    # Add a white circle in the center to create the "donut" effect
+    center_circle = Circle((0, 0), 0.7, color='white')
+    ax.add_patch(center_circle)
+    
+    # Display the score text in the center
+    ax.text(
+        0, 0, 
+        f"{score}", 
+        ha='center', 
+        va='center', 
+        fontsize=30, 
+        fontweight='bold', 
+        color=score_color
+    )
+    
+    # Display "out of 100" text below the score
+    ax.text(
+        0, -0.25, 
+        "out of 100", 
+        ha='center', 
+        va='center', 
+        fontsize=10, 
+        color='gray'
+    )
+    
+    # Ensure the plot is a circle
+    ax.axis('equal')
+
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format='png')
+    img_buffer.seek(0)
+    img_data = base64.b64encode(img_buffer.read()).decode('utf-8')
+
+    return img_data
+    
+@app.route("/customize", methods=['GET'])
+def customizeCV():
+    
+    resume = load_file(os.path.join(app.config['UPLOAD_FOLDER'], resume_file_name))
+    jobDesc = load_file(os.path.join(app.config['UPLOAD_FOLDER'], job_file_name))
+    result = generateResume(resume, jobDesc)
+    print(json.dumps(result))
+    return render_template('result.html', data=json.dumps(result))
 
 
 @app.route("/", methods=['GET', "POST"])
@@ -141,7 +186,11 @@ def grader():
         if resume_text.filename == '' or job_desc.filename == '':
             print('No selected file')
             return redirect(request.url)
-
+        
+        global resume_file_name
+        global job_file_name
+        resume_file_name = resume_text.filename
+        job_file_name = job_desc.filename
         resume = load_file(os.path.join(app.config['UPLOAD_FOLDER'], resume_text.filename))
         jobDesc = load_file(os.path.join(app.config['UPLOAD_FOLDER'], job_desc.filename))
 
@@ -152,7 +201,8 @@ def grader():
         if(type(results) is not dict):
             return render_template('errorPage.html')
         else:
-            return render_template('result.html', data=json.dumps(results))
+            chart_img = plot_circular_scorecard(results['score'])
+            return render_template('result.html', data=json.dumps(results), chart=chart_img)
 
     else:
         pass
