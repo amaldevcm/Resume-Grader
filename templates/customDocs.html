@@ -7,7 +7,6 @@
     <title>Resume Grader</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <script src="../static/main.js"></script>
     <style>
         @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
     </style>
@@ -29,34 +28,63 @@
     </header>
 
     <main class="container mx-auto px-4 py-8 max-w-5xl">
-        <div className="spacxe-y-8">
+        <div class="spacxe-y-8">
             <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">
                     Tailored Documents
                 </h2>
-                <p className="text-gray-600 mb-6">
+                <p class="text-gray-600 mb-6">
                     Based on your resume and the job description, we've customized the
                     following documents for your application.
                 </p>
             </div>
 
-            <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
-                <h3 className="text-lg font-medium text-blue-800 mb-2">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-lg font-semibold text-gray-800">Tailored Resume</h3>
+                    <button name="resumeBtn" id="resumeBtn"
+                        class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-300 hover:bg-gray-50 text-gray-700">
+                        <i class="bi bi-copy h-4 w-4"></i>
+                        <span>Copy</span>
+                    </button>
+                </div>
+                <div class="p-5 font-mono text-sm">
+                    <div class="whitespace-pre-wrap" name="resume" id="resume"> </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden my-4">
+                <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-lg font-semibold text-gray-800">Tailored Cover Letter</h3>
+                    <button name="cvBtn" id="letter"
+                        class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-300 hover:bg-gray-50 text-gray-700">
+                        <i class="bi bi-copy h-4 w-4"></i>
+                        <span>Copy</span>
+                    </button>
+                </div>
+                <div class="p-5 font-mono text-sm">
+                    <div class="whitespace-pre-wrap" name="cv" id="cv"> </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 my-4">
+                <h3 class="text-lg font-medium text-blue-800 mb-2">
                     Tips for Using These Documents
                 </h3>
-                <ul className="space-y-2 text-blue-700">
-                    <li className="flex items-start gap-2">
-                        <div className="min-w-1.5 h-1.5 rounded-full bg-blue-400 mt-2"></div>
+
+                <ul class="space-y-2 text-blue-700">
+                    <li class="flex items-start gap-2">
+                        <div class="min-w-1.5 h-1.5 rounded-full bg-blue-400 mt-2"></div>
                         <span>Review both documents carefully before submitting</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                        <div className="min-w-1.5 h-1.5 rounded-full bg-blue-400 mt-2"></div>
+                    <li class="flex items-start gap-2">
+                        <div class="min-w-1.5 h-1.5 rounded-full bg-blue-400 mt-2"></div>
                         <span>
                             Personalize further with specific details about the company
                         </span>
                     </li>
-                    <li className="flex items-start gap-2">
-                        <div className="min-w-1.5 h-1.5 rounded-full bg-blue-400 mt-2"></div>
+                    <li class="flex items-start gap-2">
+                        <div class="min-w-1.5 h-1.5 rounded-full bg-blue-400 mt-2"></div>
                         <span>Make sure to update your contact information</span>
                     </li>
                 </ul>
@@ -64,3 +92,22 @@
         </div>
     </main>
 </body>
+
+<script>
+    const result = {{ data | safe}};             // processing received data
+
+    document.getElementsByName("resumeBtn")[0].onclick = () => {
+        navigator.clipboard.writeText(result.custom_resume);
+        alert('Resume Copied');
+    }
+
+    document.getElementsByName("cvBtn")[0].onclick = () => {
+        navigator.clipboard.writeText(result.custom_CV);
+        alert('Cover Letter Copied');
+    }
+
+    document.getElementsByName("resume")[0].innerHTML = result.custom_resume;
+    document.getElementsByName("cv")[0].innerHTML = result.custom_CV;
+</script>
+
+</html>

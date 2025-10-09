@@ -107,16 +107,14 @@ def plot_circular_scorecard(score):
     
 @app.route("/customize", methods=['GET'])
 def customizeCV():
-    # resume = load_file(os.path.join(app.config['UPLOAD_FOLDER'], resume_file_name))
-    # jobDesc = load_file(os.path.join(app.config['UPLOAD_FOLDER'], job_file_name))
-    # result = generateResume(resume, jobDesc)
-    # print(json.dumps(result))
-    # if(type(result) is not dict):
-    #     return render_template('errorPage.html')
-    # else:
-    #     chart_img = plot_circular_scorecard(result['score'])
-    #     return render_template('result.html', data=json.dumps(result), chart=chart_img)
-    return render_template('customDocs.html')
+    resume = load_file(os.path.join(app.config['UPLOAD_FOLDER'], resume_file_name))
+    jobDesc = load_file(os.path.join(app.config['UPLOAD_FOLDER'], job_file_name))
+    result = generateResume(resume, jobDesc)
+
+    if(type(result) is not dict):
+        return render_template('errorPage.html')
+    else:
+        return render_template('customDocs.html', data=json.dumps(result))
 
 
 @app.route("/", methods=['GET', "POST"])
@@ -153,8 +151,6 @@ def grader():
         jobDesc = load_file(os.path.join(app.config['UPLOAD_FOLDER'], job_desc.filename))
 
         results = get_improvement_suggestions(resume, jobDesc)
-        print("\n--- Suggestions ---")
-        print(json.dumps(results))
 
         if(type(results) is not dict):
             return render_template('errorPage.html')
